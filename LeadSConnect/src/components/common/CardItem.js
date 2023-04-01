@@ -11,49 +11,11 @@ function CardItem(props) {
 
 	const { Getitems, setGetitems, Products, setProducts } = useContext(GlobalContext);
 
-
-	const GetAddedItems = () => {
-		console.log(Getitems);
-		var myHeaders = new Headers();
-		myHeaders.append("Content-Type", "application/json");
-
-		var raw = JSON.stringify({
-			"userId": "5",
-			"date": "2023-03-31",
-			"products": [...Getitems,
-			{
-				"productId": props.id,
-				"quantity": quantity
-			}
-			]
-		});
-
-		var requestOptions = {
-			method: 'POST',
-			headers: myHeaders,
-			body: raw,
-			redirect: 'follow'
-		};
-
-		fetch("https://fakestoreapi.com/carts", requestOptions)
-			.then(response => response.json())
-			.then(result => {
-				setGetitems(result.products);
-				GetExactData(result.products)
-			})
-			.catch(error => console.log('error', error));
-	}
-
-
-	const GetExactData = (items) => {
-
-		console.log(items);
-
-		if (items.length > 0) {
-			const copy = [...items];
+	const GetExactData = () => {
+			const copy = [...Getitems];
 			var index = -1;
-			for (let i = 0; i < items.length; i++) {
-				const data = items[i];
+			for (let i = 0; i < Getitems.length; i++) {
+				const data = Getitems[i];
 				if (data.productId == props.id) {
 					index = i;
 					break;
@@ -61,15 +23,16 @@ function CardItem(props) {
 			}
 			if (index != -1) {
 				copy[index].quantity = quantity
+				console.log(index);
+				console.log(copy);
 			} else {
+				console.log(index);
 				copy.push({ productId: props.id, quantity: quantity })
 			}
 
 			console.log(copy);
 			setGetitems(copy)
 			GetAddedProds(copy)
-		}
-
 	}
 
 	const GetAddedProds = (copy) => {
@@ -88,63 +51,6 @@ function CardItem(props) {
 
 	}
 
-
-	// const UpdateCartItem = () => {
-	// 	var myHeaders = new Headers();
-	// 	myHeaders.append("Content-Type", "application/json");
-
-	// 	var raw = JSON.stringify({
-	// 		"userId": "5",
-	// 		"date": "2023-03-31",
-	// 		"products": [
-	// 			{
-	// 				"productId": props.id,
-	// 				"quantity": quantity
-	// 			}
-	// 		]
-	// 	});
-
-	// 	var requestOptions = {
-	// 		method: "PUT",
-	// 		headers: myHeaders,
-	// 		body: raw,
-	// 		redirect: 'follow'
-	// 	};
-
-	// 	fetch("https://fakestoreapi.com/carts/7", requestOptions)
-	// 		.then(response => response.json())
-	// 		.then(result => console.log(result))
-	// 		.catch(error => console.log('error', error));
-	// }
-
-
-	// const AddNewCartItem = () => {
-	// 	var myHeaders = new Headers();
-	// 	myHeaders.append("Content-Type", "application/json");
-
-	// 	var raw = JSON.stringify({
-	// 		"userId": "5 ",
-	// 		"date": "2023-03-31",
-	// 		"products": [
-	// 			{
-	// 				"productId": props.id,
-	// 				"quantity": quantity
-	// 			}
-	// 		]
-	// 	});
-
-	// 	var requestOptions = {
-	// 		method: "PATCH",
-	// 		headers: myHeaders,
-	// 		body: raw,
-	// 		redirect: 'follow'
-	// 	};
-
-	// 	fetch("https://fakestoreapi.com/carts/7", requestOptions)
-	// 		.then(response => response.json())
-	// 		.then(result => console.log(result))
-	// 		.catch(error => console.log('error', error));
-	// }
 
 
 
@@ -181,7 +87,7 @@ function CardItem(props) {
 								</span>
 
 								<span className="float-right" >
-									<Button variant='outline-secondary' onClick={() => { GetAddedItems() }} size="sm">ADD</Button>
+									<Button variant='outline-secondary' onClick={() => { GetExactData() }} size="sm">ADD</Button>
 								</span>
 							</div>
 
